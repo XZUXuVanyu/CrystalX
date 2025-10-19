@@ -1,7 +1,9 @@
 #Diretories
+/.vs/
+/bin/
+/build_temp/
 /CrystalX/.vs/
-/CrystalX/bin/
-/CrystalX/buildtemp/
+/CrystalX/thirdparty_for_CrystalX/
 
 #Files
 *.user

@@ -1,3 +1,4 @@
+﻿//utf8
 #include "Application.h"
 namespace CrystalX
 {

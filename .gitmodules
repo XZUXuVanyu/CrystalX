@@ -1,0 +1,3 @@
+[submodule "CrystalX/thirdparty/spdlog"]
+	path = CrystalX/thirdparty/spdlog
+	url = https://github.com/gabime/spdlog.git
