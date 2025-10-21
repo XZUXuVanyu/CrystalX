@@ -40,12 +40,12 @@ project "CrystalX"
         }
     
     filter "configurations:Debug"
-        defines "CRYSTALX_DEBUG"
+        defines {"CRYSTALX_DEBUG", "CRYSTALX_CA_ON"}
         symbols "On"
         runtime "Debug"
 
     filter "configurations:Release"
-        defines "CRYSTALX_RELEASE"
+        defines {"CRYSTALX_RELEASE", "CRYSTALX_CA_ON"}
         optimize "On"
         runtime "Release"
 
@@ -87,12 +87,12 @@ project "SandBox"
         }
     
     filter "configurations:Debug"
-        defines "CRYSTALX_DEBUG"
+        defines {"CRYSTALX_DEBUG", "CRYSTALX_CA_ON"}
         symbols "On"
         runtime "Debug"
 
     filter "configurations:Release"
-        defines "CRYSTALX_RELEASE"
+        defines {"CRYSTALX_RELEASE", "CRYSTALX_CA_ON"}
         optimize "On"
         runtime "Release"
 

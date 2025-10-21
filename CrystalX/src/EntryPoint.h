@@ -3,7 +3,7 @@
 #ifdef CRYSTALX_WINDOWS
 namespace CrystalX
 {
-	extern Application* CreateApplication();
+	extern Application* Create_Application();
 }
 
 //todo: Initfunc
@@ -13,12 +13,9 @@ int main(int argc, char** argv)
 	CrystalX::Log::Initialize();
 	CrystalX::Log::EnableFileLogging("test.log", true);
 	
-	auto app = CrystalX::CreateApplication();
+	auto app = CrystalX::Create_Application();
 	app->Run();
 	delete app;
 }
 
 #endif
-
-
-

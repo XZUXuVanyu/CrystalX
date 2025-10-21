@@ -18,13 +18,14 @@ namespace CrystalX
 	//----------------------------------------------------------------------------------------------
 	// 构造函数与析构函数实现 | Constructor and destructor implementations
 	//----------------------------------------------------------------------------------------------
-	Application::Application(const std::string& name)
-		: m_Identifier(GenerateId(), name)
-	{}
-
-	Application::Application()
-		: m_Identifier(GenerateId(), "CrystalX_Application_"+std::to_string(m_Identifier.first))
+	Application::Application(const std::string& name, bool windowed)
+		: m_Identifier(GenerateId(), name), m_Windowed(windowed)
 	{
+		WindowProperty winprops;
+		winprops.Title = name;
+		m_Window = (m_Windowed) ? std::unique_ptr<Window>(Window::Create_Window(winprops)) : nullptr;
+		Log::CoreLogger()->info("[{}](id = {}, windowed = {}) on creating at memory {}"
+			, m_Identifier.second, m_Identifier.first, (m_Windowed) ? "true" : "false", fmt::ptr(this));
 	}
 
 	Application::~Application()
@@ -44,7 +45,7 @@ namespace CrystalX
 		// 调用应用初始化回调 | Call application initialization callback
 		OnInitialize();
 		
-		Log::GetCoreLogger()->info("[{}]_id:#{} starting main loop",m_Identifier.second, m_Identifier.first);
+		Log::CoreLogger()->info("[{}](id = {}) starting main loop", m_Identifier.second, m_Identifier.first);
 
 		// 设置运行状态并进入主循环 | Set running state and enter main loop
 		m_Running = true;
@@ -54,10 +55,10 @@ namespace CrystalX
 			OnRender();
 		}
 
-		Log::GetCoreLogger()->warn("Scheduling [{}]_id:#{} shutdown",
+		Log::CoreLogger()->warn("Scheduling [{}]_id:#{} shutdown",
 			m_Identifier.second, m_Identifier.first);
 		OnShutdown();
-		Log::GetCoreLogger()->info("Scheduling [{}]_id:#{} shutdown",
+		Log::CoreLogger()->info("Scheduling [{}]_id:#{} shutdown",
 			m_Identifier.second, m_Identifier.first);
 		
 	}

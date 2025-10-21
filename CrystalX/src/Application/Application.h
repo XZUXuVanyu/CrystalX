@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Core.h"
 #include "Log/Log.h"
+#include "Window/Window.h"
 
 namespace CrystalX
 {
@@ -30,10 +31,9 @@ namespace CrystalX
 		/// Application constructor, requires application name
 		/// </summary>
 		/// <param name="name">应用名称 | Application name</param>
-		Application(const std::string& name);
+		/// <param name="windowed">是否为应用创建窗口 | If this application needs a window</param>
+		Application(const std::string& name = "CrystalX_Applicaion", bool windowed = true);
 
-		Application();
-		
 		virtual ~Application();
 
 		//----------------------------------------------------------------------------------------------
@@ -51,10 +51,9 @@ namespace CrystalX
 		/// <returns>标识符对 (ID, 名称) | Identifier pair (ID, name)</returns>
 		std::pair<unsigned int, std::string> GetIdentifier() const;
 
-
 		/// 应用初始化回调 | Application initialization callback
 		virtual void OnInitialize() {
-			Log::GetCoreLogger()->info("[{}]_id:#{} on initialize (by defalut CrystalX::Application Oninitialize() ) at memory {}"
+			Log::CoreLogger()->info("[{}](id = {}) on initialize (by defalut CrystalX::Application Oninitialize() ) at memory {}"
 				,m_Identifier.second, m_Identifier.first, fmt::ptr(this));
 		};
 
@@ -74,8 +73,11 @@ namespace CrystalX
 		// 应用的唯一标识符 | Application 's unique identifier
 		const std::pair<unsigned int, std::string> m_Identifier;
 
-	private:
+		//是否为窗口应用程序 | If application needs a window
+		std::atomic<bool> m_Windowed{ true };
+		std::unique_ptr<Window> m_Window;
 
+	private:
 		// 下一个可用的应用ID | Next available application ID
 		static std::atomic<unsigned int> s_NextId;
 
@@ -91,5 +93,5 @@ namespace CrystalX
 	/// A port for creating CrystalX::Application, should be implemented in CrystalX application
 	/// </summary>
 	/// <returns>指向应用实例的指针 | Pointer that points to application instance </returns>
-	Application* CreateApplication();
+	Application* Create_Application();
 }

@@ -43,8 +43,8 @@ namespace CrystalX
 		static void SetLogLevel(spdlog::level::level_enum level);
 
 		// 获取日志器实例 | Get logger instances
-		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger();
-		inline static std::shared_ptr<spdlog::logger>& GetFileLogger();
+		inline static std::shared_ptr<spdlog::logger>& CoreLogger();
+		inline static std::shared_ptr<spdlog::logger>& FileLogger();
 
 		inline static bool GetInitializeState();
 	private:

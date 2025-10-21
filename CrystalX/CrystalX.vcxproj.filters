@@ -10,6 +10,12 @@
     <Filter Include="Window">
       <UniqueIdentifier>{3DEA79DA-298C-A4B0-1247-B804FE872B01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Window\Platform">
+      <UniqueIdentifier>{31FB73ED-9D86-E1B1-A697-64A612A23DB2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Platform\Windows">
+      <UniqueIdentifier>{6B461E85-D77D-661C-E087-CA3F4C3E8D15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application\Application.h">
@@ -20,6 +26,9 @@
     <ClInclude Include="src\EntryPoint.h" />
     <ClInclude Include="src\Log\Log.h">
       <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window\Platform\Windows\Windows_Window.h">
+      <Filter>Window\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\Window\Window.h">
       <Filter>Window</Filter>
@@ -32,8 +41,8 @@
     <ClCompile Include="src\Log\Log.cpp">
       <Filter>Log</Filter>
     </ClCompile>
-    <ClCompile Include="src\Window\Window.cpp">
-      <Filter>Window</Filter>
+    <ClCompile Include="src\Window\Platform\Windows\Windows_Window.cpp">
+      <Filter>Window\Platform\Windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -91,11 +91,11 @@ namespace CrystalX
 		}
 	}
 
-	inline std::shared_ptr<spdlog::logger>& Log::GetCoreLogger()
+	inline std::shared_ptr<spdlog::logger>& Log::CoreLogger()
 	{
 		return s_CoreLogger;
 	}
-	inline std::shared_ptr<spdlog::logger>& Log::GetFileLogger()
+	inline std::shared_ptr<spdlog::logger>& Log::FileLogger()
 	{
 		return s_FileLogger;
 	}
