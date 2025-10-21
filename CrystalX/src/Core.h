@@ -1,5 +1,14 @@
 ﻿#pragma once
 
+#include <string>
+#include <iostream>
+#include <exception>
+#include <memory>
+
+#include <glad/glad.h>
+#include <glfw/glfw3.h>
+
+
 //WINDOWS_PLATFORM
 #ifdef CRYSTALX_WINDOWS
 	#ifdef CRYSTALX_BUILD_DLL

@@ -7,6 +7,9 @@
     <Filter Include="Log">
       <UniqueIdentifier>{E704880B-530E-887C-DC89-9E7C4892937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{3DEA79DA-298C-A4B0-1247-B804FE872B01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application\Application.h">
@@ -18,7 +21,9 @@
     <ClInclude Include="src\Log\Log.h">
       <Filter>Log</Filter>
     </ClInclude>
-    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Window\Window.h">
+      <Filter>Window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.cpp">
@@ -27,6 +32,8 @@
     <ClCompile Include="src\Log\Log.cpp">
       <Filter>Log</Filter>
     </ClCompile>
-    <ClCompile Include="src\Event\Event.cpp" />
+    <ClCompile Include="src\Window\Window.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

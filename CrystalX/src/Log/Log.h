@@ -1,46 +1,60 @@
-﻿//utf8
-#pragma once
-
-#include <memory>
-
-#include "../Core.h"
+﻿#pragma once
+#define FMT_HEADER_ONLY
+#include "Core.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/basic_file_sink.h"
+
 
 namespace CrystalX
 {
-	//CrystalX 日志类 | CrystalX Log Class
+	//=============================================================================================
+	/*
+	包装了 spdlog[https://github.com/gabime/spdlog] 库 | Repackage of spdlog
+
+	主要功能:
+		1.实时输出日志                 - 控制台日志
+		2.保存日志到文件               - 文件日志
+
+	Functionalities:
+		1.Print logs in realtime      - Console logging
+		2.Save logs to local logfile  - File logging
+	*/
+	//=============================================================================================
+	// CrystalX 日志类 | CrystalX Log Class
 	class CRYSTALX_API Log
 	{
 	public:
+		// 初始化日志系统 | Initialize logging system
+		static void Initialize();
 
-		//初始化 CrystalX::Log | Initialize CrystalX::Log 
-		static void Init();
+		// 关闭日志系统 | Disable logging system
+		static void Disable();
+		/// <summary>
+		/// 启用/禁用文件日志 | Enable/disable file logging
+		/// </summary>
+		/// <param name="filename">
+		/// 日志文件路径 | diretory to where log file is saved
+		/// </param>
+		static void EnableFileLogging(const std::string& filename, bool if_overwrite);
+		static void DisableFileLogging();
 
-		/// 返回 CRYSTALX_DEBUG 运行时下的日志器 | Return the CoreLogger under RUNTIME_DEBUG
-		inline static std::shared_ptr<spdlog::logger>& CoreLogger() { return CrstalX_CoreLogger; }
-		/// 返回 CRYSTALX_RELEASE 运行时下的日志器 | Return the ClientLogger under RELEASE_DEBUG
-		inline static std::shared_ptr<spdlog::logger>& ClientLogger() { return CrstalX_ClientLogger; }
+		// 设置全局日志级别 | Set global log level
+		static void SetLogLevel(spdlog::level::level_enum level);
+
+		// 获取日志器实例 | Get logger instances
+		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger();
+		inline static std::shared_ptr<spdlog::logger>& GetFileLogger();
+
+		inline static bool GetInitializeState();
 	private:
-		static std::shared_ptr<spdlog::logger> CrstalX_CoreLogger;
-		static std::shared_ptr<spdlog::logger> CrstalX_ClientLogger;
+		// 核心日志器 | Core logger
+		inline static std::shared_ptr<spdlog::logger> s_CoreLogger;
+
+		// 文件日志器 | File logger (可选)
+		inline static std::shared_ptr<spdlog::logger> s_FileLogger;
+
+		// 初始化状态 | Initialization status
+		inline static bool s_Initialized = false;
 	};
 }
-
-//DEBUG运行时 | RUNTIME_DEBUG
-#ifdef CRYSTALX_DEBUG 
-	#define CRYSTALX_CORE_FATAL(...)     ::CrystalX::Log::CoreLogger()->fatal(__VA_ARGS__)
-	#define CRYSTALX_CORE_ERROR(...)     ::CrystalX::Log::CoreLogger()->error(__VA_ARGS__)
-	#define CRYSTALX_CORE_WARN(...)      ::CrystalX::Log::CoreLogger()->warn(__VA_ARGS__)
-	#define CRYSTALX_CORE_INFO(...)      ::CrystalX::Log::CoreLogger()->info(__VA_ARGS__)
-	#define CRYSTALX_CORE_TRACE(...)     ::CrystalX::Log::CoreLogger()->trace(__VA_ARGS__)
-#endif // CRYSTALX_DEBUG
-
-//RELEASE运行时 | RUNTIME_RELEASE
-#ifdef CRYSTALX_RELEASE
-	#define CRYSTALX_FATAL(...)   ::CrystalX::Log::ClientLogger()->fatal(__VA_ARGS__)
-	#define CRYSTALX_ERROR(...)   ::CrystalX::Log::ClientLogger()->error(__VA_ARGS__)
-	#define CRYSTALX_WARN(...)    ::CrystalX::Log::ClientLogger()->warn(__VA_ARGS__)
-	#define CRYSTALX_INFO(...)    ::CrystalX::Log::ClientLogger()->info(__VA_ARGS__)
-	#define CRYSTALX_TRACE(...)   ::CrystalX::Log::ClientLogger()->trace(__VA_ARGS__)
-#endif // CRYSTALX_RELEASE

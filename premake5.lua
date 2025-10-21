@@ -23,6 +23,7 @@ project "CrystalX"
     }
 
     includedirs {
+        "%{wks.location}/%{prj.name}/src/",
         "%{wks.location}/%{prj.name}/thirdparty_for_CrystalX/spdlog/include/"
     }
     
@@ -30,7 +31,7 @@ project "CrystalX"
         cppdialect "C++20"
         systemversion "latest"
 
-        staticruntime "On"
+        staticruntime "Off"
         buildoptions { "/utf-8" }
 
         defines {
@@ -78,7 +79,7 @@ project "SandBox"
     filter "system:windows"
         cppdialect "C++20"
         systemversion "latest"
-        staticruntime "On"
+        staticruntime "Off"
         buildoptions { "/utf-8" }
 
         defines {
