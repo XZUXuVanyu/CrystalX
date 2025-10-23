@@ -24,7 +24,10 @@ project "CrystalX"
 
     includedirs {
         "%{wks.location}/%{prj.name}/src/",
-        "%{wks.location}/%{prj.name}/thirdparty_for_CrystalX/spdlog/include/"
+        "%{wks.location}/%{prj.name}/thirdparty_for_CrystalX/",
+        "%{wks.location}/%{prj.name}/thirdparty_for_CrystalX/spdlog/include/",
+        "%{wks.location}/%{prj.name}/thirdparty_for_CrystalX/glfw/include/",
+        "%{wks.location}/%{prj.name}/thirdparty_for_CrystalX/glad/include/"
     }
     
     filter "system:windows"
@@ -40,17 +43,17 @@ project "CrystalX"
         }
     
     filter "configurations:Debug"
-        defines {"CRYSTALX_DEBUG", "CRYSTALX_CA_ON"}
+        defines {"CRYSTALX_DEBUG", "CRYSTALX_DEBUG_LOG" , "CRYSTALX_CA_ON"}
         symbols "On"
         runtime "Debug"
 
     filter "configurations:Release"
-        defines {"CRYSTALX_RELEASE", "CRYSTALX_CA_ON"}
+        defines {"CRYSTALX_RELEASE", "CRYSTALX_RELEASE_LOG" ,"CRYSTALX_CA_ON"}
         optimize "On"
         runtime "Release"
 
     filter "configurations:Dist"
-        defines "CRYSTALX_DIST"
+        defines {"CRYSTALX_DIST","CRYSTALX_DIST_LOG"}
         optimize "On"
         runtime "Release"
 
@@ -67,9 +70,9 @@ project "SandBox"
         "%{prj.name}/src/**.cpp"
     }
 
-    includedirs {
+    includedirs { 
         "%{wks.location}/CrystalX/src/",
-        "%{wks.location}/CrystalX/thirdparty_for_CrystalX/spdlog/include/"
+        "%{wks.location}/CrystalX/thirdparty_for_CrystalX/spdlog/include/" 
     }
 
     links {
@@ -87,12 +90,12 @@ project "SandBox"
         }
     
     filter "configurations:Debug"
-        defines {"CRYSTALX_DEBUG", "CRYSTALX_CA_ON"}
+        defines {"CRYSTALX_DEBUG", "CRYSTALX_DEBUG_LOG" ,"CRYSTALX_CA_ON"}
         symbols "On"
         runtime "Debug"
 
     filter "configurations:Release"
-        defines {"CRYSTALX_RELEASE", "CRYSTALX_CA_ON"}
+        defines {"CRYSTALX_RELEASE", "CRYSTALX_RELEASE_LOG" ,"CRYSTALX_CA_ON"}
         optimize "On"
         runtime "Release"
 

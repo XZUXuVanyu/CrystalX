@@ -2,12 +2,15 @@
 #include "Core.h"
 #include "Log/Log.h"
 #include "Window/Window.h"
+#include "Event/WindowEvent.h"
 namespace CrystalX
 {
 	//Window 类在 Windows 操作系统下的实现 | Detailed implementations of CrystalX::Window under Windows OS.
 	class Windows_Window : public Window
 	{
 	public:
+		void SetWindowEventCallback(const WindowEventCallback& callback) override;
+
 		Windows_Window(const WindowProperty& windowprops);
 		virtual ~Windows_Window();
 
@@ -21,6 +24,8 @@ namespace CrystalX
 		bool Vsync() override;
 		//设置Vsync状态 | Set Vsync state
 		bool Vsync(bool setstate) override;
+		
+
 	private:
 		virtual void Initialize(const WindowProperty& winprops);
 		virtual void ShutDown();
@@ -32,6 +37,7 @@ namespace CrystalX
 			std::pair<unsigned int, unsigned int> Size;
 			bool Vsync;
 
+			WindowEventCallback EventCallback;
 			WindowData(const std::string& title = "Crystal Engine",
 				std::pair<unsigned int, unsigned int> size = std::pair(1280, 720), bool vsync = true)
 				: Title(title), Size(size), Vsync(vsync) {

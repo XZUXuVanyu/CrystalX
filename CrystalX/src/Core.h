@@ -28,6 +28,101 @@
 	#define CRYSTALX_ASSERT_ERR(flag, ...)
 #endif // CRSTALX_CA_ON
 
+// ALTERABLE LOGLEVEL
+// #define CRYSTALX_DEBUG_LOG to enable DEBUG level log
+// #define CRYSTALX_RELEASE_LOG to enable RELEASE level log
+// #define CRYSTALX_DIST_LOG to enable DIST level log
+// RELEASE level for default
+#if !defined(CRYSTALX_DEBUG_LOG) && !defined(CRYSTALX_RELEASE_LOG) && !defined(CRYSTALX_DIST_LOG)
+#define CRYSTALX_RELEASE_LOG
+#endif
+
+#if defined(_MSC_VER)
+#define CX_FUNCTION_SIGN __FUNCSIG__
+#else
+#define CX_FUNCTION_SIGN __PRETTY_FUNCTION__
+#endif
+
+#define CRYSTALX_GET_FULL_FUNCTION_NAME []() -> std::string \
+{ \
+    std::string sign = CX_FUNCTION_SIGN; \
+    size_t start = sign.find("CrystalX::"); \
+    if (start != std::string::npos) \
+    { \
+        size_t param_start = sign.find('(', start); \
+        if (param_start != std::string::npos) \
+        { \
+            return sign.substr(start, param_start - start - 1); \
+        } \
+    } \
+    size_t param_start = sign.find('('); \
+    if (param_start != std::string::npos) \
+    { \
+        return sign.substr(0, param_start - 1); \
+    } \
+    return sign; \
+}()
+
+#define CRYSTALX_GET_FUNCTION_NAME []() -> std::string \
+{ \
+    std::string sign = CX_FUNCTION_SIGN; \
+    size_t last_colon = sign.rfind("::"); \
+    if (last_colon != std::string::npos) \
+    { \
+        size_t param_start = sign.find('(', last_colon); \
+        if (param_start != std::string::npos) \
+        { \
+            return sign.substr(last_colon + 2, param_start - last_colon - 2); \
+        } \
+    } \
+    size_t param_start = sign.find('('); \
+    if (param_start != std::string::npos) \
+    { \
+        size_t name_start = sign.rfind(' ', param_start); \
+        if (name_start != std::string::npos) \
+        { \
+            return sign.substr(name_start + 1, param_start - name_start - 1); \
+        } \
+    } \
+    return "UnknownFunction"; \
+}()
+
+#ifdef CRYSTALX_DEBUG_LOG
+#define CRYSTALX_trace(...)    \
+        CrystalX::Log::CoreLogger()->trace("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+#define CRYSTALX_debug(...)    \
+        CrystalX::Log::CoreLogger()->debug("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+#define CRYSTALX_info(...)     \
+        CrystalX::Log::CoreLogger()->info("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+#define CRYSTALX_warn(...)     \
+        CrystalX::Log::CoreLogger()->warn("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+#define CRYSTALX_error(...)    \
+        CrystalX::Log::CoreLogger()->error("{}//}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+#define CRYSTALX_critical(...) \
+        CrystalX::Log::CoreLogger()->critical("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+
+#elif defined(CRYSTALX_RELEASE_LOG)
+#define CRYSTALX_trace(...)
+#define CRYSTALX_debug(...)
+#define CRYSTALX_info(...)     \
+        CrystalX::Log::CoreLogger()->info("{}//{}", CRYSTALX_GET_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+#define CRYSTALX_warn(...)     \
+        CrystalX::Log::CoreLogger()->warn("{}//{}", CRYSTALX_GET_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+#define CRYSTALX_error(...)    \
+        CrystalX::Log::CoreLogger()->error("{}//{}", CRYSTALX_GET_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+#define CRYSTALX_critical(...) \
+        CrystalX::Log::CoreLogger()->critical("{}//{}", CRYSTALX_GET_FUNCTION_NAME, fmt::format(__VA_ARGS__))
+
+#elif defined(CRYSTALX_DIST_LOG)
+#define CRYSTALX_trace(...)
+#define CRYSTALX_debug(...)
+#define CRYSTALX_info(...)
+#define CRYSTALX_warn(...)
+#define CRYSTALX_error(...)    \
+        CrystalX::Log::CoreLogger()->error(__VA_ARGS__)
+#define CRYSTALX_critical(...) \
+        CrystalX::Log::CoreLogger()->critical(__VA_ARGS__)
+#endif
 
 //简单的移位操作,获得 x 对应位的掩码 | Simple bit push marco to get a bitmask with bit x is 1
 #define BIT_MASK(x) (1 << x)

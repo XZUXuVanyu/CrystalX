@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Log/Log.h"
+#include "Event/Event.h"
 
 namespace CrystalX
 {
@@ -20,12 +21,11 @@ namespace CrystalX
 	class CRYSTALX_API Window
 	{
 	public:
-		//todo: eventcallback
-		//?
-		//using EventCallbackFucntion = std::function<void(Event&)>;
+
+		using WindowEventCallback = std::function<void(Event&)>;
+		virtual void SetWindowEventCallback(const WindowEventCallback& callback) = 0;
 
 		virtual ~Window() {};
-
 		virtual void OnUpdate() = 0;
 
 		//返回窗口大小参数 | Return Window size

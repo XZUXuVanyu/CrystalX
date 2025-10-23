@@ -4,6 +4,9 @@
     <Filter Include="Application">
       <UniqueIdentifier>{D9DE78AF-4594-F1A4-CE88-EB7B3A3DE8A8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{E70B220D-5320-4ABE-1CA2-ED1D887546EF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Log">
       <UniqueIdentifier>{E704880B-530E-887C-DC89-9E7C4892937C}</UniqueIdentifier>
     </Filter>
@@ -24,6 +27,12 @@
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="src\CrystalX.h" />
     <ClInclude Include="src\EntryPoint.h" />
+    <ClInclude Include="src\Event\Event.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\WindowEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
     <ClInclude Include="src\Log\Log.h">
       <Filter>Log</Filter>
     </ClInclude>

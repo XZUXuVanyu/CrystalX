@@ -2,6 +2,8 @@
 
 namespace CrystalX
 {
+	/*基本操作实现 | Basic operation implementations*/
+	//----------------------------------------------------------------------------------------------
 	void Log::Initialize()
 	{
 		if (s_Initialized) {
@@ -18,25 +20,23 @@ namespace CrystalX
 
 			s_Initialized = true;
 
-			s_CoreLogger->info("Core Log system initialized successfully");
+			CRYSTALX_info("core log system initialized successfully");
 		}
 		catch (const spdlog::spdlog_ex& ex) {
 			std::cerr << "[error] Core Log initialization failed: " << ex.what() << std::endl;
 		}
 	}
-
 	void Log::Disable()
 	{
 		if (s_Initialized) {
-			s_CoreLogger->info("Disabling log system");
+			s_CoreLogger->info("disabling log system");
 			DisableFileLogging();
 			s_CoreLogger.reset();
 			s_Initialized = false;
 			std::cout << "[info] Core Log system shutdown complete." << std::endl;
 		}
 	}
-
-	void Log::EnableFileLogging(const std::string& filename , bool if_overwrite)
+	void Log::EnableFileLogging(const std::string& filename, bool if_overwrite)
 	{
 		if (!s_Initialized) {
 			Initialize();
@@ -50,17 +50,16 @@ namespace CrystalX
 			s_FileLogger->set_pattern("[%Y-%m-%d %H:%M:%S] [%n] [%l]: %v");
 
 			s_CoreLogger->sinks().push_back(s_FileLogger->sinks().back());
-			s_CoreLogger->info("File logging enabled, view logfile at \".\\{}\"", filename);
+			CRYSTALX_debug("file log system enabled, view logfile at \".\\{}\"", filename);
 		}
 		catch (const spdlog::spdlog_ex& ex) {
-			s_CoreLogger->error("Failed to enable file logging: {}", ex.what());
+			s_CoreLogger->error("failed to enable file log system: {}", ex.what());
 		}
 	}
-
 	void Log::DisableFileLogging()
 	{
 		if (s_FileLogger) {
-			s_CoreLogger->info("Disabling file logging");
+			CRYSTALX_trace("Disabling file logging");
 			s_FileLogger->flush();
 
 			// 从核心日志器中移除文件sink | remove file sink from CoreLogger sink
@@ -71,10 +70,9 @@ namespace CrystalX
 			}
 
 			s_FileLogger.reset();
-			s_CoreLogger->info("File logging successfully disabled");
+			CRYSTALX_info("File logging successfully disabled");
 		}
 	}
-
 	void Log::SetLogLevel(spdlog::level::level_enum level)
 	{
 		if (s_CoreLogger) {
@@ -83,26 +81,18 @@ namespace CrystalX
 				s_FileLogger->set_level(level);
 			}
 			else {
-				s_CoreLogger->warn("Haven't initialize Log yet");
+				CRYSTALX_warn("haven't initialize file log system yet");
 			}
 		}
 		else {
-			std::cout << "[warning] Haven't initialize Log yet" << std::endl;
+			std::cout << "[warning] haven't initialize core log system yet" << std::endl;
 		}
 	}
-
-	inline std::shared_ptr<spdlog::logger>& Log::CoreLogger()
-	{
-		return s_CoreLogger;
-	}
-	inline std::shared_ptr<spdlog::logger>& Log::FileLogger()
-	{
-		return s_FileLogger;
-	}
-	inline bool Log::GetInitializeState()
+	bool Log::GetInitializeState()
 	{
 		return s_Initialized;
 	}
+	//----------------------------------------------------------------------------------------------
 }
 
 //todo : use marco or sth else to add a (caller):msg type output

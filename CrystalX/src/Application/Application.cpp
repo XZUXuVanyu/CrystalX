@@ -2,74 +2,89 @@
 
 namespace CrystalX
 {
-	//----------------------------------------------------------------------------------------------
-	// 静态成员初始化 | Static member initialization
+	/*构造ID | ID Construction*/
 	//----------------------------------------------------------------------------------------------
 	std::atomic<unsigned int> Application::s_NextId{ 1 };
-
-	//----------------------------------------------------------------------------------------------
-	// 私有方法实现 | Private method implementations
-	//----------------------------------------------------------------------------------------------
 	unsigned int Application::GenerateId()
 	{
 		return s_NextId++;
 	}
-
 	//----------------------------------------------------------------------------------------------
-	// 构造函数与析构函数实现 | Constructor and destructor implementations
+
+
+
+	/*构造函数与析构函数实现 | Constructor and destructor implementations*/
 	//----------------------------------------------------------------------------------------------
 	Application::Application(const std::string& name, bool windowed)
 		: m_Identifier(GenerateId(), name), m_Windowed(windowed)
 	{
-		WindowProperty winprops;
+		CRYSTALX_trace("on creating at (location = {})", fmt::ptr(this));
+		CrystalX::WindowProperty winprops;
 		winprops.Title = name;
 		m_Window = (m_Windowed) ? std::unique_ptr<Window>(Window::Create_Window(winprops)) : nullptr;
-		Log::CoreLogger()->info("[{}](id = {}, windowed = {}) on creating at memory {}"
-			, m_Identifier.second, m_Identifier.first, (m_Windowed) ? "true" : "false", fmt::ptr(this));
+		if (m_Window)
+		{
+			CRYSTALX_trace("has successfully created window, now setting WindowEventCallback");
+			m_Window->SetWindowEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+			CRYSTALX_info("set WindowEventCallback successfully");
+		}
+		//here should call Application::OnInitialize()
+		OnInitialize();
 	}
-
 	Application::~Application()
 	{
-		// 确保应用已停止运行 | Ensure application has stopped running
-		if (m_Running)
-		{
-			RequestClose();
-		}
+	}
+	//----------------------------------------------------------------------------------------------
+
+
+
+	/*事件处理 | Process events */
+	//-----------------------------------------------------------------------------------------------
+	void Application::OnEvent(Event& event)
+	{
+		CRYSTALX_trace("triggered");
+		EventDispatcher Dispatcher(event);
+
+		Dispatcher.Dispatch<WindowClose>([this](WindowClose& e) {
+			CRYSTALX_trace("triggered");
+			return OnWindowClose(e);
+			});
 	}
 
-	//----------------------------------------------------------------------------------------------
-	// 公共方法实现 | Public method implementations
+	bool Application::OnWindowClose(WindowClose& event)
+	{
+		CRYSTALX_trace("triggered");
+		Close();
+		event.m_EventHandled = true;
+		return true;
+	}
+	//-----------------------------------------------------------------------------------------------
+
+
+	/*实用方法 | Functionalities*/
 	//----------------------------------------------------------------------------------------------
 	void Application::Run()
 	{
-		// 调用应用初始化回调 | Call application initialization callback
+		//here call Application::SandBox::OnInitialize() (override version)
 		OnInitialize();
-		
-		Log::CoreLogger()->info("[{}](id = {}) starting main loop", m_Identifier.second, m_Identifier.first);
+		CRYSTALX_info("now running");
 
-		// 设置运行状态并进入主循环 | Set running state and enter main loop
+		//主循环 | Main loop
 		m_Running = true;
 		while (m_Running)
 		{
-			OnUpdate();
-			OnRender();
+			m_Window->OnUpdate();
+			this->OnUpdate();
 		}
-
-		Log::CoreLogger()->warn("Scheduling [{}]_id:#{} shutdown",
-			m_Identifier.second, m_Identifier.first);
-		OnShutdown();
-		Log::CoreLogger()->info("Scheduling [{}]_id:#{} shutdown",
-			m_Identifier.second, m_Identifier.first);
-		
 	}
-
-	void Application::RequestClose()
+	void Application::Close()
 	{
+		OnShutdown();
 		m_Running = false;
 	}
-
 	std::pair<unsigned int, std::string> Application::GetIdentifier() const
 	{
 		return m_Identifier;
 	}
+	//----------------------------------------------------------------------------------------------
 }

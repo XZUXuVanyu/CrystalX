@@ -78,8 +78,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_BUILD_DLL;CRYSTALX_DEBUG;CRYSTALX_CA_ON;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;thirdparty_for_CrystalX\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_BUILD_DLL;CRYSTALX_DEBUG;CRYSTALX_DEBUG_LOG;CRYSTALX_CA_ON;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;thirdparty_for_CrystalX;thirdparty_for_CrystalX\spdlog\include;thirdparty_for_CrystalX\glfw\include;thirdparty_for_CrystalX\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -97,8 +97,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_BUILD_DLL;CRYSTALX_RELEASE;CRYSTALX_CA_ON;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;thirdparty_for_CrystalX\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_BUILD_DLL;CRYSTALX_RELEASE;CRYSTALX_RELEASE_LOG;CRYSTALX_CA_ON;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;thirdparty_for_CrystalX;thirdparty_for_CrystalX\spdlog\include;thirdparty_for_CrystalX\glfw\include;thirdparty_for_CrystalX\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -120,8 +120,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_BUILD_DLL;CRYSTALX_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;thirdparty_for_CrystalX\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_BUILD_DLL;CRYSTALX_DIST;CRYSTALX_DIST_LOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;thirdparty_for_CrystalX;thirdparty_for_CrystalX\spdlog\include;thirdparty_for_CrystalX\glfw\include;thirdparty_for_CrystalX\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -144,6 +144,8 @@
     <ClInclude Include="src\Core.h" />
     <ClInclude Include="src\CrystalX.h" />
     <ClInclude Include="src\EntryPoint.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\WindowEvent.h" />
     <ClInclude Include="src\Log\Log.h" />
     <ClInclude Include="src\Window\Platform\Windows\Windows_Window.h" />
     <ClInclude Include="src\Window\Window.h" />

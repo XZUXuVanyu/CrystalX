@@ -3,6 +3,21 @@ namespace CrystalX
 {
 	static bool s_GLFWInitialized = false;
 
+	void Windows_Window::SetWindowEventCallback(const WindowEventCallback& callback)
+	{
+		CRYSTALX_trace("setting WindowEventCallback for [{}]", m_Data.Title);
+		m_Data.EventCallback = callback;
+
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+			CRYSTALX_trace("glfwSetWindowCloseCallback triggered");
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			CRYSTALX_trace("creating Event::WindowClose");
+			WindowClose event;
+			data.EventCallback(event);
+			CRYSTALX_trace("glfwSetWindowCloseCallback handled");
+			});
+	}
+
 	Window* Window::Create_Window(const WindowProperty& windowprops)
 	{
 		return new Windows_Window(windowprops);
@@ -36,16 +51,18 @@ namespace CrystalX
 		return m_Data.Vsync;
 	}
 
+	
+
 	void Windows_Window::Initialize(const WindowProperty& winprops)
 	{
 		m_Data.Title = winprops.Title;
 		m_Data.Size = winprops.Size;
 
-		Log::CoreLogger()->info("Creating window [{}]", m_Data.Title);
+		CRYSTALX_trace("creating window [{}]", m_Data.Title);
 		if (!s_GLFWInitialized)
 		{
 			int success = glfwInit();
-			CRYSTALX_ASSERT_ERR(success, "Can't initialize glfw");
+			CRYSTALX_ASSERT_ERR(success, "can't initialize glfw");
 		}
 		m_Window = glfwCreateWindow(m_Data.Size.first, m_Data.Size.second, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);

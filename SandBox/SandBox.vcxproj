@@ -78,7 +78,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_DEBUG;CRYSTALX_CA_ON;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_DEBUG;CRYSTALX_DEBUG_LOG;CRYSTALX_CA_ON;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\CrystalX\src;..\CrystalX\thirdparty_for_CrystalX\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -96,7 +96,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_RELEASE;CRYSTALX_CA_ON;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CRYSTALX_WINDOWS;CRYSTALX_RELEASE;CRYSTALX_RELEASE_LOG;CRYSTALX_CA_ON;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\CrystalX\src;..\CrystalX\thirdparty_for_CrystalX\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -136,6 +136,9 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\SandBox.h" />
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SandBox.cpp" />
   </ItemGroup>

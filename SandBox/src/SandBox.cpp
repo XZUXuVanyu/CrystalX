@@ -1,22 +1,28 @@
-﻿#include <CrystalX.h>
-class SandBox : public CrystalX::Application
+﻿#include "SandBox.h"
+
+void SandBox::OnInitialize()
 {
-public:
-	SandBox() : Application("Sandbox") { }
-	//todo ： figureout why this error happening at debug while not happening at release
-	void OnInitialize() override
-	{
-		CrystalX::Log::CoreLogger()->info("[{}](id = {}) initialized at memory {} successfully"
-			,GetIdentifier().second, GetIdentifier().first, fmt::ptr(this));
-	};
-	void OnUpdate() override
-	{
-		if (m_Windowed and m_Window)
-		{
-			m_Window->OnUpdate();
-		}
-	}
-};
+	CRYSTALX_trace("initialize sandbox");
+}
+void SandBox::OnUpdate()
+{
+
+}
+
+void SandBox::OnRender()
+{
+
+}
+
+void SandBox::OnShutdown()
+{
+	CRYSTALX_trace("closing sandbox");
+}
+
+bool SandBox::OnWindowClose(CrystalX::WindowClose& event)
+{
+	return CrystalX::Application::OnWindowClose(event);
+}
 
 CrystalX::Application* CrystalX::Create_Application()
 {
