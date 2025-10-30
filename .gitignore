@@ -1,10 +1,1 @@
-#Diretories
-/.vs/
-/bin/
-/build_temp/
-/CrystalX/.vs/
-/CrystalX/thirdparty_for_CrystalX/
 
-#Files
-*.user
-*.log
