@@ -137,10 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\SandBox.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\SandBox.cpp" />
+    <ClCompile Include="src\Sandbox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrystalX\CrystalX.vcxproj">

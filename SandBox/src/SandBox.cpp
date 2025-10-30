@@ -1,30 +1,21 @@
-﻿#include "SandBox.h"
-
-void SandBox::OnInitialize()
+﻿#include "CrystalX.h"
+namespace CrystalX
 {
-	CRYSTALX_trace("initialize sandbox");
-}
-void SandBox::OnUpdate()
-{
+	class SandBox : public CrystalX::Application
+	{
+	public:
+		SandBox() : Application("SandBox") {};
+		~SandBox() {};
+		void UserOnKeyPress(KeyPressEvent& event) {
+			if (event.GetKeyCode() == KeyCode::Escape)
+			{
+				ShutDown();
+			}
+		};
+	};
 
-}
-
-void SandBox::OnRender()
-{
-
-}
-
-void SandBox::OnShutdown()
-{
-	CRYSTALX_trace("closing sandbox");
-}
-
-bool SandBox::OnWindowClose(CrystalX::WindowClose& event)
-{
-	return CrystalX::Application::OnWindowClose(event);
-}
-
-CrystalX::Application* CrystalX::Create_Application()
-{
-	return new SandBox();
+	Application* Create_Application()
+	{
+		return new SandBox();
+	}
 }

@@ -20,7 +20,7 @@ namespace CrystalX
 
 			s_Initialized = true;
 
-			CRYSTALX_info("core log system initialized successfully");
+			CRYSTALX_LOG_INFO("core log system initialized successfully");
 		}
 		catch (const spdlog::spdlog_ex& ex) {
 			std::cerr << "[error] Core Log initialization failed: " << ex.what() << std::endl;
@@ -50,7 +50,7 @@ namespace CrystalX
 			s_FileLogger->set_pattern("[%Y-%m-%d %H:%M:%S] [%n] [%l]: %v");
 
 			s_CoreLogger->sinks().push_back(s_FileLogger->sinks().back());
-			CRYSTALX_debug("file log system enabled, view logfile at \".\\{}\"", filename);
+			CRYSTALX_LOG_DEBUG("file log system enabled, view logfile at \".\\{}\"", filename);
 		}
 		catch (const spdlog::spdlog_ex& ex) {
 			s_CoreLogger->error("failed to enable file log system: {}", ex.what());
@@ -59,7 +59,7 @@ namespace CrystalX
 	void Log::DisableFileLogging()
 	{
 		if (s_FileLogger) {
-			CRYSTALX_trace("Disabling file logging");
+			CRYSTALX_LOG_TRACE("Disabling file logging");
 			s_FileLogger->flush();
 
 			// 从核心日志器中移除文件sink | remove file sink from CoreLogger sink
@@ -70,7 +70,7 @@ namespace CrystalX
 			}
 
 			s_FileLogger.reset();
-			CRYSTALX_info("File logging successfully disabled");
+			CRYSTALX_LOG_INFO("File logging successfully disabled");
 		}
 	}
 	void Log::SetLogLevel(spdlog::level::level_enum level)
@@ -81,7 +81,7 @@ namespace CrystalX
 				s_FileLogger->set_level(level);
 			}
 			else {
-				CRYSTALX_warn("haven't initialize file log system yet");
+				CRYSTALX_LOG_WARN("haven't initialize file log system yet");
 			}
 		}
 		else {

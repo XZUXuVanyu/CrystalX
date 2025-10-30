@@ -1,81 +1,114 @@
 ﻿#include "Windows_Window.h"
 namespace CrystalX
 {
-	static bool s_GLFWInitialized = false;
-
-	void Windows_Window::SetWindowEventCallback(const WindowEventCallback& callback)
+	bool Windows_Window::glfwInitialized = false;
+	std::unique_ptr<Window> Window::Create(const WindowProperty& props)
 	{
-		CRYSTALX_trace("setting WindowEventCallback for [{}]", m_Data.Title);
-		m_Data.EventCallback = callback;
+		#ifdef CRYSTALX_WINDOWS
+				return std::make_unique<Windows_Window>(props);
+		#else
+				return nullptr;
+		#endif
+	}
+	Windows_Window::Windows_Window(const WindowProperty& windowproperty)
+	{
+		Initialize(windowproperty);
+	}
+	void Windows_Window::SetWindowCallback(const WindowCallbackFunction& callbackfunction)
+	{
+		CRYSTALX_LOG_INFO("set windowcallback");
+		m_WindowData.windowcallback = callbackfunction;
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
-			CRYSTALX_trace("glfwSetWindowCloseCallback triggered");
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-			CRYSTALX_trace("creating Event::WindowClose");
-			WindowClose event;
-			data.EventCallback(event);
-			CRYSTALX_trace("glfwSetWindowCloseCallback handled");
+			auto* windowdata_p = static_cast<RuntimeWindowData*>(glfwGetWindowUserPointer(window));
+			if (windowdata_p and windowdata_p->windowcallback)
+			{
+				WindowCloseEvent event;
+				windowdata_p->windowcallback(event);
+			}
 			});
-	}
+		CRYSTALX_LOG_INFO("set windowclose callback success");
 
-	Window* Window::Create_Window(const WindowProperty& windowprops)
-	{
-		return new Windows_Window(windowprops);
-	}
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+			auto* windowdata_p = static_cast<RuntimeWindowData*>(glfwGetWindowUserPointer(window));
+			if (windowdata_p and windowdata_p->windowcallback)
+			{
+				windowdata_p->Size = { width,height };
+				WindowResizeEvent event(windowdata_p->Size.first, windowdata_p->Size.second);
+				windowdata_p->windowcallback(event);
+			}
+			});
+		CRYSTALX_LOG_INFO("set windowresize callback success");
 
-	Windows_Window::Windows_Window(const WindowProperty& windowprops)
-	{
-		Initialize(windowprops);
-	}
+		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focused) {
+			auto* windowdata_p = static_cast<RuntimeWindowData*>(glfwGetWindowUserPointer(window));
+			if (windowdata_p and windowdata_p->windowcallback)
+			{
+				WindowFocusEvent event(focused);
+				windowdata_p->windowcallback(event);
+			}
+			});
+		CRYSTALX_LOG_INFO("set windowfocus callback success");
 
-	Windows_Window::~Windows_Window()
-	{
-		ShutDown();
-	}
+		glfwSetWindowPosCallback(m_Window, [](GLFWwindow* window, int xpos, int ypos) {
+			auto* windowdata_p = static_cast<RuntimeWindowData*>(glfwGetWindowUserPointer(window));
+			if (windowdata_p and windowdata_p->windowcallback)
+			{
+				WindowMoveEvent event(xpos, ypos);
+				windowdata_p->windowcallback(event);
+			}
+			});
+		CRYSTALX_LOG_INFO("set windowmove callback success");
 
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+			auto* windowdata_p = static_cast<RuntimeWindowData*>(glfwGetWindowUserPointer(window));
+			if (windowdata_p and windowdata_p->windowcallback)
+			{
+				KeyCode keycode = CRYSTALX_GET_KEYCODE(key);
+				switch (action)
+				{
+					case GLFW_PRESS:
+					{
+						KeyPressEvent event(keycode,KeyModifier::None);
+						windowdata_p->windowcallback(event);
+						break;
+					}
+					case GLFW_RELEASE:
+					{
+						KeyReleaseEvent event(keycode, KeyModifier::None);
+						windowdata_p->windowcallback(event);
+						break;
+					}
+					case GLFW_REPEAT:
+					{
+						KeyRepeatEvent event(keycode, KeyModifier::None);
+						windowdata_p->windowcallback(event);
+						break;
+					}
+				}
+			}
+			});
+		CRYSTALX_LOG_INFO("set key callback success");
+	}
 	void Windows_Window::OnUpdate()
 	{
-		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
+		glfwPollEvents();
 	}
-
-	bool Windows_Window::Vsync()
+	void Windows_Window::Initialize(const WindowProperty& windowproperty)
 	{
-		return m_Data.Vsync;
-	}
-
-	bool Windows_Window::Vsync(bool setstate)
-	{
-		(setstate) ? glfwSwapInterval(1) : glfwSwapInterval(0);
-		m_Data.Vsync = setstate;
-		return m_Data.Vsync;
-	}
-
-	
-
-	void Windows_Window::Initialize(const WindowProperty& winprops)
-	{
-		m_Data.Title = winprops.Title;
-		m_Data.Size = winprops.Size;
-
-		CRYSTALX_trace("creating window [{}]", m_Data.Title);
-		if (!s_GLFWInitialized)
+		if (!glfwInitialized)
 		{
-			int success = glfwInit();
-			CRYSTALX_ASSERT_ERR(success, "can't initialize glfw");
+			glfwInit();
+			m_WindowData.Title = windowproperty.Title;
+			m_WindowData.Size = windowproperty.Size;
+			m_WindowData.VsyncState = windowproperty.VsyncState;
+
+			m_Window = glfwCreateWindow(m_WindowData.Size.first, m_WindowData.Size.second, m_WindowData.Title.c_str(),
+				nullptr, nullptr);
+
+			glfwSetWindowUserPointer(m_Window, &m_WindowData);
+			glfwMakeContextCurrent(m_Window);
 		}
-		m_Window = glfwCreateWindow(m_Data.Size.first, m_Data.Size.second, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
-
-		// 将窗口实例数据关联到GLFW窗口,用于在回调函数中检索 
-		// Associates window instance data with GLFW window for retrieval in callbacks
-		glfwSetWindowUserPointer(m_Window, &m_Data);
-		Vsync(true);
 	}
-
-	void Windows_Window::ShutDown()
-	{
-		glfwDestroyWindow(m_Window);
-	}
-
 }

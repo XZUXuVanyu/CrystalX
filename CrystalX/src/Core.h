@@ -5,6 +5,7 @@
 #include <functional>
 #include <iostream>
 #include <exception>
+#include <unordered_map>
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
@@ -88,41 +89,46 @@
 }()
 
 #ifdef CRYSTALX_DEBUG_LOG
-#define CRYSTALX_trace(...)    \
+#define CRYSTALX_LOG_TRACE(...)    \
         CrystalX::Log::CoreLogger()->trace("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
-#define CRYSTALX_debug(...)    \
+#define CRYSTALX_LOG_DEBUG(...)    \
         CrystalX::Log::CoreLogger()->debug("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
-#define CRYSTALX_info(...)     \
+#define CRYSTALX_LOG_INFO(...)     \
         CrystalX::Log::CoreLogger()->info("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
-#define CRYSTALX_warn(...)     \
+#define CRYSTALX_LOG_WARN(...)     \
         CrystalX::Log::CoreLogger()->warn("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
-#define CRYSTALX_error(...)    \
+#define CRYSTALX_LOG_ERROR(...)    \
         CrystalX::Log::CoreLogger()->error("{}//}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
-#define CRYSTALX_critical(...) \
+#define CRYSTALX_LOG_CRITICAL(...) \
         CrystalX::Log::CoreLogger()->critical("{}//{}", CRYSTALX_GET_FULL_FUNCTION_NAME, fmt::format(__VA_ARGS__))
 
 #elif defined(CRYSTALX_RELEASE_LOG)
-#define CRYSTALX_trace(...)
-#define CRYSTALX_debug(...)
-#define CRYSTALX_info(...)     \
+#define CRYSTALX_LOG_TRACE(...)
+#define CRYSTALX_LOG_DEBUG(...)
+#define CRYSTALX_LOG_INFO(...)     \
         CrystalX::Log::CoreLogger()->info("{}//{}", CRYSTALX_GET_FUNCTION_NAME, fmt::format(__VA_ARGS__))
-#define CRYSTALX_warn(...)     \
+#define CRYSTALX_LOG_WARN(...)     \
         CrystalX::Log::CoreLogger()->warn("{}//{}", CRYSTALX_GET_FUNCTION_NAME, fmt::format(__VA_ARGS__))
-#define CRYSTALX_error(...)    \
+#define CRYSTALX_LOG_ERROR(...)    \
         CrystalX::Log::CoreLogger()->error("{}//{}", CRYSTALX_GET_FUNCTION_NAME, fmt::format(__VA_ARGS__))
-#define CRYSTALX_critical(...) \
+#define CRYSTALX_LOG_CRITICAL(...) \
         CrystalX::Log::CoreLogger()->critical("{}//{}", CRYSTALX_GET_FUNCTION_NAME, fmt::format(__VA_ARGS__))
 
 #elif defined(CRYSTALX_DIST_LOG)
-#define CRYSTALX_trace(...)
-#define CRYSTALX_debug(...)
-#define CRYSTALX_info(...)
-#define CRYSTALX_warn(...)
-#define CRYSTALX_error(...)    \
+#define CRYSTALX_LOG_TRACE(...)
+#define CRYSTALX_LOG_DEBUG(...)
+#define CRYSTALX_LOG_INFO(...)
+#define CRYSTALX_LOG_WARN(...)
+#define CRYSTALX_LOG_ERROR(...)    \
         CrystalX::Log::CoreLogger()->error(__VA_ARGS__)
-#define CRYSTALX_critical(...) \
-        CrystalX::Log::CoreLogger()->critical(__VA_ARGS__)
+#define CRYSTALX_LOG_CRITICAL(...) \
+        CrystalX::Log::CoreLogger()->critical(__VA_ARGS__)  
 #endif
+
+#define CRYSTALX_GET_KEYCODE(platformkeycode) CrystalX::KeyMapper::ToCrystalXKeyCode(platformkeycode)
+#define CRYSTALX_GET_PLATFORM_CODE(keycode) CrystalX::KeyMapper::ToPlatformKeyCode(keycode)
+#define CRYSTALX_GET_MODIFIER(platformkeycode) CrystalX::KeyMapper::ToCrystalXKeyModifier(platformkeycode)
+#define CRYSTALX_GET_PLATFORM_MODS(modifier) CrystalX::KeyMapper::ToPlatformKeyModifier(modifier)
 
 //简单的移位操作,获得 x 对应位的掩码 | Simple bit push marco to get a bitmask with bit x is 1
 #define BIT_MASK(x) (1 << x)

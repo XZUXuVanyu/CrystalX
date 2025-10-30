@@ -145,14 +145,17 @@
     <ClInclude Include="src\CrystalX.h" />
     <ClInclude Include="src\EntryPoint.h" />
     <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\KeyEvent.h" />
     <ClInclude Include="src\Event\WindowEvent.h" />
     <ClInclude Include="src\Log\Log.h" />
+    <ClInclude Include="src\Window\Platform\KeyMapper.h" />
     <ClInclude Include="src\Window\Platform\Windows\Windows_Window.h" />
     <ClInclude Include="src\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.cpp" />
     <ClCompile Include="src\Log\Log.cpp" />
+    <ClCompile Include="src\Window\Platform\KeyMapper.cpp" />
     <ClCompile Include="src\Window\Platform\Windows\Windows_Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
